@@ -1,0 +1,33 @@
+[
+  {
+    "name": "Admin User",
+    "email": "admin@gmail.com",
+    "password": "admin",
+    "role": "admin"
+  },
+  {
+    "name": "Teacher One",
+    "email": "tone@gmail.com",
+    "password": "tone",
+    "role": "teacher"
+  },
+  {
+    "name": "Teacher Two",
+    "email": "ttwo@gmail.com",
+    "password": "ttwo",
+    "role": "teacher"
+  },
+  {
+    "name": "Student One",
+    "email": "sone@gmail.com",
+    "password": "sone",
+    "role": "student"
+  },
+  {
+    "name": "Student Two",
+    "email": "stwo@gmail.com",
+    "password": "stwo",
+    "role": "student"
+  }
+]
+
