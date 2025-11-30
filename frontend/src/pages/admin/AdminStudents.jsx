@@ -1,33 +1,40 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
-import useAdmin from '../../services/useAdmin'
-import { FiPlus, FiEdit, FiTrash2, FiMail, FiPhone, FiUsers } from 'react-icons/fi'
-import { HiAcademicCap } from 'react-icons/hi2'
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+import useAdmin from "../../services/useAdmin";
+import {
+  FiPlus,
+  FiEdit,
+  FiTrash2,
+  FiMail,
+  FiPhone,
+  FiUsers,
+} from "react-icons/fi";
+import { HiAcademicCap } from "react-icons/hi2";
 
 function AdminStudents() {
-  const admin = useAdmin()
-  const queryClient = useQueryClient()
+  const admin = useAdmin();
+  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['admin', 'students'],
+    queryKey: ["admin", "students"],
     queryFn: admin.getStudents,
-  })
+  });
 
   const deleteMutation = useMutation({
     mutationFn: admin.deleteStudent,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'students'] })
-      queryClient.invalidateQueries({ queryKey: ['admin', 'stats'] })
+      queryClient.invalidateQueries({ queryKey: ["admin", "students"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "stats"] });
     },
-  })
+  });
 
-  const students = data?.students || []
+  const students = data?.students || [];
 
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this student?')) {
-      deleteMutation.mutate(id)
+    if (window.confirm("Are you sure you want to delete this student?")) {
+      deleteMutation.mutate(id);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-indigo-50/30 p-8">
@@ -88,8 +95,8 @@ function AdminStudents() {
                             <FiUsers className="w-8 h-8 text-gray-400" />
                           </div>
                           <p className="text-gray-500">No students found.</p>
-                          <Link 
-                            to="/admin/students/add" 
+                          <Link
+                            to="/admin/students/add"
                             className="text-purple-600 hover:text-purple-700 font-medium flex items-center gap-2"
                           >
                             <FiPlus className="w-4 h-4" />
@@ -100,7 +107,10 @@ function AdminStudents() {
                     </tr>
                   ) : (
                     students.map((student) => (
-                      <tr key={student.id} className="hover:bg-purple-50/50 transition-colors">
+                      <tr
+                        key={student.id}
+                        className="hover:bg-purple-50/50 transition-colors"
+                      >
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           #{student.id}
                         </td>
@@ -109,7 +119,9 @@ function AdminStudents() {
                             <div className="p-2 bg-blue-100 rounded-lg">
                               <FiUsers className="w-5 h-5 text-blue-600" />
                             </div>
-                            <span className="text-sm font-semibold text-gray-900">{student.name}</span>
+                            <span className="text-sm font-semibold text-gray-900">
+                              {student.name}
+                            </span>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -129,10 +141,29 @@ function AdminStudents() {
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-semibold">
-                            {student.enrolledCount || 0} subjects
-                          </span>
+                          {student.enrolledSubjects?.length > 0 ? (
+                            <div className="flex flex-col gap-2">
+                              {student.enrolledSubjects.map((sub) => (
+                                <div
+                                  key={sub.id}
+                                  className="px-4 py-2 bg-indigo-50 border border-indigo-200 rounded-xl shadow-sm"
+                                >
+                                  <p className="text-sm font-semibold text-indigo-700">
+                                    {sub.name}
+                                  </p>
+                                  <p className="text-xs text-indigo-500">
+                                    Code: {sub.code}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-sm text-gray-400">
+                              No subjects
+                            </span>
+                          )}
                         </td>
+
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex items-center gap-3">
                             <button className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
@@ -157,7 +188,7 @@ function AdminStudents() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default AdminStudents
+export default AdminStudents;

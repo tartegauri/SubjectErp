@@ -1,33 +1,33 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
-import useAdmin from '../../services/useAdmin'
-import { FiPlus, FiEdit, FiTrash2, FiMail, FiUser } from 'react-icons/fi'
-import { HiAcademicCap } from 'react-icons/hi2'
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+import useAdmin from "../../services/useAdmin";
+import { FiPlus, FiEdit, FiTrash2, FiMail, FiUser } from "react-icons/fi";
+import { HiAcademicCap } from "react-icons/hi2";
 
 function AdminTeachers() {
-  const admin = useAdmin()
-  const queryClient = useQueryClient()
+  const admin = useAdmin();
+  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['admin', 'teachers'],
+    queryKey: ["admin", "teachers"],
     queryFn: admin.getTeachers,
-  })
+  });
 
   const deleteMutation = useMutation({
     mutationFn: admin.deleteTeacher,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'teachers'] })
-      queryClient.invalidateQueries({ queryKey: ['admin', 'stats'] })
+      queryClient.invalidateQueries({ queryKey: ["admin", "teachers"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "stats"] });
     },
-  })
+  });
 
-  const teachers = data?.teachers || []
+  const teachers = data?.teachers || [];
 
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this teacher?')) {
-      deleteMutation.mutate(id)
+    if (window.confirm("Are you sure you want to delete this teacher?")) {
+      deleteMutation.mutate(id);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-indigo-50/30 p-8">
@@ -85,8 +85,8 @@ function AdminTeachers() {
                             <HiAcademicCap className="w-8 h-8 text-gray-400" />
                           </div>
                           <p className="text-gray-500">No teachers found.</p>
-                          <Link 
-                            to="/admin/teachers/add" 
+                          <Link
+                            to="/admin/teachers/add"
                             className="text-purple-600 hover:text-purple-700 font-medium flex items-center gap-2"
                           >
                             <FiPlus className="w-4 h-4" />
@@ -97,7 +97,10 @@ function AdminTeachers() {
                     </tr>
                   ) : (
                     teachers.map((teacher) => (
-                      <tr key={teacher.id} className="hover:bg-purple-50/50 transition-colors">
+                      <tr
+                        key={teacher.id}
+                        className="hover:bg-purple-50/50 transition-colors"
+                      >
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           #{teacher.id}
                         </td>
@@ -106,7 +109,9 @@ function AdminTeachers() {
                             <div className="p-2 bg-green-100 rounded-lg">
                               <HiAcademicCap className="w-5 h-5 text-green-600" />
                             </div>
-                            <span className="text-sm font-semibold text-gray-900">{teacher.name}</span>
+                            <span className="text-sm font-semibold text-gray-900">
+                              {teacher.name}
+                            </span>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -116,9 +121,25 @@ function AdminTeachers() {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-semibold">
-                            {teacher.subjectsCount || 0} subjects
-                          </span>
+                          <div className="flex flex-wrap gap-2">
+                            {teacher.subjects?.length > 0 ? (
+                              teacher.subjects.map((sub) => (
+                                <div
+                                  key={sub.id}
+                                  className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-xs shadow-sm border border-indigo-200"
+                                >
+                                  <p className="font-semibold">{sub.name}</p>
+                                  <p className="text-[10px] text-indigo-600">
+                                    {sub.code}
+                                  </p>
+                                </div>
+                              ))
+                            ) : (
+                              <span className="text-gray-400 text-sm">
+                                No subjects
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <div className="flex items-center gap-3">
@@ -144,7 +165,7 @@ function AdminTeachers() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default AdminTeachers
+export default AdminTeachers;
